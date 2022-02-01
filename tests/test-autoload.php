@@ -17,7 +17,7 @@ class Test_Autoload extends TestCase {
 	/**
 	 * Generated autoloader.
 	 *
-	 * @var |Closure
+	 * @var Autoloader
 	 */
 	protected $autoloader;
 
@@ -123,6 +123,23 @@ class Test_Autoload extends TestCase {
 		$this->assert_true_after_registering_autoloader(
 			'interface_exists',
 			[ __NAMESPACE__ . '\Autoloaded\Autoloaded_Interface' ]
+		);
+	}
+
+	/**
+	 * Test registering the autoloader through the register method.
+	 *
+	 * @return void
+	 */
+	public function test_register_method() {
+		$this->assertFalse(
+			class_exists( __NAMESPACE__ . '\Autoloaded\Other_Autoloaded_Class' ),
+		);
+
+		$this->autoloader->register();
+
+		$this->assertTrue(
+			class_exists( __NAMESPACE__ . '\Autoloaded\Other_Autoloaded_Class' ),
 		);
 	}
 }
