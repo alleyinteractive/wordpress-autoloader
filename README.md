@@ -38,8 +38,6 @@ spl_autoload_register(
 		__DIR__ . '/src',
 	)
 );
-
-//
 ```
 
 ## Testing
