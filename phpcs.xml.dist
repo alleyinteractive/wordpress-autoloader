@@ -20,11 +20,16 @@
 		<properties>
 			<property name="prefixes" type="array">
 				<element value="Alley_Interactive\Autoloader" />
+				<element value="Autoloader" />
 			</property>
 		</properties>
 	</rule>
 
 	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<exclude-pattern>tests/*</exclude-pattern>
 	</rule>
 </ruleset>
