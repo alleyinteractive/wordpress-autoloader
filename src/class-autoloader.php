@@ -2,10 +2,10 @@
 /**
  * Autoloader file
  *
- * @package WordPressAutoloader
+ * @package WordPress_Autoloader
  */
 
-namespace WordPressAutoloader;
+namespace Alley_Interactive\Autoloader;
 
 /**
  * WordPress Autoload Generator

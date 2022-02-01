@@ -2,13 +2,13 @@
 /**
  * Autoload test file
  *
- * @package WordPressAutoloader
+ * @package WordPress_Autoloader
  */
 
-namespace WordPressAutoloader\Tests;
+namespace Alley_Interactive\Autoloader\Tests;
 
 use PHPUnit\Framework\TestCase;
-use WordPressAutoloader\Autoloader;
+use Alley_Interactive\Autoloader\Autoloader;
 
 /**
  * Autoloader Test Case

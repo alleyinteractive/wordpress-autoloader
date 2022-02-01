@@ -2,10 +2,10 @@
 /**
  * Trait file for Autoloaded_Trait
  *
- * @package WordPressAutoloader
+ * @package WordPress_Autoloader
  */
 
-namespace WordPressAutoloader\Tests\Autoloaded;
+namespace Alley_Interactive\Autoloader\Tests\Autoloaded;
 
 /**
  * Trait for testing autoloading.

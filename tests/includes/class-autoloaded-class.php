@@ -2,10 +2,10 @@
 /**
  * Class file for Autoloaded_Class
  *
- * @package WordPressAutoloader
+ * @package WordPress_Autoloader
  */
 
-namespace WordPressAutoloader\Tests\Autoloaded;
+namespace Alley_Interactive\Autoloader\Tests\Autoloaded;
 
 /**
  * Class for testing autoloading.

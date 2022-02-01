@@ -2,10 +2,10 @@
 /**
  * Class file for Autoloaded_Class
  *
- * @package WordPressAutoloader
+ * @package WordPress_Autoloader
  */
 
-namespace WordPressAutoloader\Tests\Autoloaded\Subnamespaced\With_Underscores;
+namespace Alley_Interactive\Autoloader\Tests\Autoloaded\Subnamespaced\With_Underscores;
 
 /**
  * Class for testing autoloading.

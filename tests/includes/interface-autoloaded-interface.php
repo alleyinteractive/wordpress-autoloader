@@ -2,10 +2,10 @@
 /**
  * Interface file for Autoloaded_Interface
  *
- * @package WordPressAutoloader
+ * @package WordPress_Autoloader
  */
 
-namespace WordPressAutoloader\Tests\Autoloaded;
+namespace Alley_Interactive\Autoloader\Tests\Autoloaded;
 
 /**
  * Interface for testing autoloading.
