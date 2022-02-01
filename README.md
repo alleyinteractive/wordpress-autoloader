@@ -1,7 +1,7 @@
 # WordPress Autoloader
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/alleyinteractive/wordpress-autoloader.svg?style=flat-square)](https://packagist.org/packages/alleyinteractive/wordpress-autoloader)
-[![Tests](https://github.com/alleyinteractive/wordpress-autoloader/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/alleyinteractive/wordpress-autoloader/actions/workflows/run-tests.yml)
+[![Tests](https://github.com/alleyinteractive/wordpress-autoloader/actions/workflows/tests.yml/badge.svg)](https://github.com/alleyinteractive/wordpress-autoloader/actions/workflows/tests.yml)
 
 A PHP Autoloader that supports the [Wordpress Coding
 Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/). Supports automatically loading PHP files named following the WordPress standards. For example, a folder that looks like this would be autoloaded as:
