@@ -26,9 +26,11 @@ composer require alleyinteractive/wordpress-autoloader
 ## Usage
 
 ```php
-Alley_Interactive\Autoloader\Autoloader::generate(
-	'Plugin\\Namespace',
-	__DIR__ . '/src',
+spl_autoload_register(
+	Alley_Interactive\Autoloader\Autoloader::generate(
+		'Plugin\\Namespace',
+		__DIR__ . '/src',
+	)
 );
 ```
 
