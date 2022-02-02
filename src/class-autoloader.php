@@ -114,9 +114,5 @@ class Autoloader {
 		$root_path = \rtrim( $root_path, \DIRECTORY_SEPARATOR ) . \DIRECTORY_SEPARATOR;
 
 		return new static( $namespace, $root_path );
-
-		return function ( $classname ) use ( $namespace, $root_path ) {
-
-		};
 	}
 }
