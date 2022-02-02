@@ -4,7 +4,7 @@
 [![Tests](https://github.com/alleyinteractive/wordpress-autoloader/actions/workflows/tests.yml/badge.svg)](https://github.com/alleyinteractive/wordpress-autoloader/actions/workflows/tests.yml)
 
 A PHP Autoloader that supports the [Wordpress Coding
-Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/). Supports automatically loading PHP files named following the WordPress standards. For example, a folder that looks like this would be autoloaded as:
+Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/). For example, a folder that looks like this would be autoloaded as:
 
 ```
 src/class-example-class.php -> Root_Namespace\Example_Class
