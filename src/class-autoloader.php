@@ -16,14 +16,14 @@ class Autoloader {
 	 *
 	 * @var string
 	 */
-	public string $namespace;
+	protected string $namespace;
 
 	/**
 	 * Root path of the namespace to load from.
 	 *
 	 * @var string
 	 */
-	public string $root_path;
+	protected string $root_path;
 
 	/**
 	 * Constructor.
@@ -33,7 +33,7 @@ class Autoloader {
 	 */
 	public function __construct( string $namespace, string $root_path ) {
 		$this->namespace = $namespace;
-		$this->root_path = $root_path;
+		$this->root_path = rtrim( $root_path, '/\\' ) . '/';
 	}
 
 	/**
