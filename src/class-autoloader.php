@@ -33,7 +33,9 @@ class Autoloader {
 	 */
 	public function __construct( string $namespace, string $root_path ) {
 		$this->namespace = $namespace;
-		$this->root_path = rtrim( $root_path, '/\\' ) . '/';
+
+		// Ensure consistent root.
+		$this->root_path = rtrim( $root_path, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR;
 	}
 
 	/**
@@ -110,9 +112,6 @@ class Autoloader {
 	 * @return static Function for spl_autoload_register().
 	 */
 	public static function generate( string $namespace, string $root_path ): callable {
-		// Ensure consistent root.
-		$root_path = \rtrim( $root_path, \DIRECTORY_SEPARATOR ) . \DIRECTORY_SEPARATOR;
-
 		return new static( $namespace, $root_path );
 	}
 }
