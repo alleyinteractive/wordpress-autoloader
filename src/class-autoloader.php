@@ -107,16 +107,12 @@ class Autoloader {
 	 *
 	 * @param string $namespace Namespace to autoload.
 	 * @param string $root_path Path in which to look for files.
-	 * @return \Closure Function for spl_autoload_register().
+	 * @return static Function for spl_autoload_register().
 	 */
 	public static function generate( string $namespace, string $root_path ): callable {
 		// Ensure consistent root.
 		$root_path = \rtrim( $root_path, \DIRECTORY_SEPARATOR ) . \DIRECTORY_SEPARATOR;
 
 		return new static( $namespace, $root_path );
-
-		return function ( $classname ) use ( $namespace, $root_path ) {
-
-		};
 	}
 }
