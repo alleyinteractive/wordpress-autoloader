@@ -67,7 +67,7 @@ class Autoloader {
 		$parts = \explode( '\\', $classname );
 
 		// Retrieve the class name (last item) and convert it to a filename.
-		$class = \strtolower( \str_replace( [ '\\', '_' ], [ '/', '-' ], \array_pop( $parts ) ) );
+		$class = \strtolower( \str_replace( '_', '-', \array_pop( $parts ) ) );
 
 		$base_path = '';
 
