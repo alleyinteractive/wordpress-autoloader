@@ -5,6 +5,11 @@ documented in this file.
 
 ## [Unreleased]
 
+## [0.2.0]
+
+- Supporting PHP 8.1
+- Removing `preg_replace` with `str_*` functions.
+
 ## 0.1.2
 
 - Small performance improvement.
