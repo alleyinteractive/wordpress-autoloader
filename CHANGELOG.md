@@ -5,6 +5,10 @@ documented in this file.
 
 ## [Unreleased]
 
+## 0.1.2
+
+- Small performance improvement.
+
 ## 0.1.1
 
 - Ensure autoloader root path always has a trailing slash.

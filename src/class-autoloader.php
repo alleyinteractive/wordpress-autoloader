@@ -63,27 +63,27 @@ class Autoloader {
 			return;
 		}
 
-		// Remove the namespace.
-		$classname = \preg_replace( '#^' . \preg_quote( $this->namespace, '#' ) . '#', '', $classname );
-		$classname = \ltrim( $classname, '\\' );
+		// Break up the classname into parts.
+		$parts = \explode( '\\', $classname );
 
-		// Convert to segments.
-		$classname = \strtolower( $classname );
-		$classname = \str_replace( [ '\\', '_' ], [ '/', '-' ], $classname );
-		$classes   = \explode( '/', $classname );
+		// Retrieve the class name (last item) and convert it to a filename.
+		$class = \strtolower( \str_replace( '_', '-', \array_pop( $parts ) ) );
 
-		// Retrieve the class name (last item).
-		$class = \array_pop( $classes );
+		$base_path = '';
 
-		// Build the base path.
-		$base_path = \implode( '/', $classes );
+		// Build the base path relative to the sub-namespace.
+		$sub_namespace = \substr( \implode( DIRECTORY_SEPARATOR, $parts ), \strlen( $this->namespace ) );
+
+		if ( ! empty( $sub_namespace ) ) {
+			$base_path = \str_replace( '_', '-', \strtolower( $sub_namespace ) );
+		}
 
 		// Support multiple locations since the class could be a class, trait or interface.
 		$paths = [
-			'%1$s/class-%2$s.php',
-			'%1$s/trait-%2$s.php',
-			'%1$s/interface-%2$s.php',
-			'%1$s/enum-%2$s.php',
+			'%1$s' . DIRECTORY_SEPARATOR . 'class-%2$s.php',
+			'%1$s' . DIRECTORY_SEPARATOR . 'trait-%2$s.php',
+			'%1$s' . DIRECTORY_SEPARATOR . 'interface-%2$s.php',
+			'%1$s' . DIRECTORY_SEPARATOR . 'enum-%2$s.php',
 		];
 
 		/*
@@ -97,7 +97,6 @@ class Autoloader {
 			$path = $this->root_path . \sprintf( $path, $base_path, $class );
 
 			if ( \file_exists( $path ) ) {
-				// Path is defined by this file and validated.
 				require_once $path; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 				return;
 			}
