@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "php": "^7.4.0 || ^8.0"
+    "php": "^7.4.0|^8.0|^8.1"
   },
   "require-dev": {
     "alleyinteractive/alley-coding-standards": "^0.3.0",
@@ -35,6 +35,9 @@
     "phpcbf": "phpcbf --standard=./phpcs.xml.dist .",
     "phpcs": "phpcs --standard=./phpcs.xml.dist .",
     "phpunit": "vendor/bin/phpunit",
-    "test": "@phpunit"
+    "test": [
+      "@phpcs",
+      "@phpunit"
+    ]
   }
 }
