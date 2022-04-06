@@ -75,16 +75,15 @@ class Autoloader {
 		$sub_namespace = \substr( \implode( DIRECTORY_SEPARATOR, $parts ), \strlen( $this->namespace ) );
 
 		if ( ! empty( $sub_namespace ) ) {
-			$base_path = \str_replace( [ '\\', '_' ], [ '/', '-' ], \strtolower( $sub_namespace ) );
-			$base_path = \ltrim( $base_path, '\\' );
+			$base_path = \str_replace( '_', '-', \strtolower( $sub_namespace ) );
 		}
 
 		// Support multiple locations since the class could be a class, trait or interface.
 		$paths = [
-			'%1$s/class-%2$s.php',
-			'%1$s/trait-%2$s.php',
-			'%1$s/interface-%2$s.php',
-			'%1$s/enum-%2$s.php',
+			'%1$s' . DIRECTORY_SEPARATOR . 'class-%2$s.php',
+			'%1$s' . DIRECTORY_SEPARATOR . 'trait-%2$s.php',
+			'%1$s' . DIRECTORY_SEPARATOR . 'interface-%2$s.php',
+			'%1$s' . DIRECTORY_SEPARATOR . 'enum-%2$s.php',
 		];
 
 		/*
