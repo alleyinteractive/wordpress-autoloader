@@ -14,7 +14,7 @@
   },
   "require-dev": {
     "alleyinteractive/alley-coding-standards": "^0.3.0",
-    "phpunit/phpunit": "^8.5.8 || ^9.3.3"
+    "phpunit/phpunit": "^9.5.8"
   },
   "config": {
     "sort-packages": true,
