@@ -177,18 +177,20 @@ class Test_Autoload extends TestCase {
 
 		ini_set( 'apc.enabled', '1' );
 
+		$class = __NAMESPACE__ . '\Autoloaded\Autoloaded_Class';
+
+		$this->assertFalse( class_exists( $class ) );
+
 		$this->autoloader->set_apcu_prefix( 'apcu_prefix_' );
 
-		$this->assertEmpty( apcu_fetch( 'apcu_prefix_' . Autoloader::class ) );
+		$this->assertEmpty( apcu_fetch( 'apcu_prefix_' . $class ) );
 
 		$this->autoloader->register();
 
 		var_dump( 'autoloader', $this->autoloader );
 
-		$this->assertTrue(
-			class_exists( Autoloader::class ),
-		);
+		$this->assertTrue( class_exists( $class ) );
 
-		$this->assertNotEmpty( apcu_fetch( 'apcu_prefix_' . Autoloader::class ) );
+		$this->assertNotEmpty( apcu_fetch( 'apcu_prefix_' . $class ) );
 	}
 }
