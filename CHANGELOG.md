@@ -5,6 +5,9 @@ documented in this file.
 
 ## [Unreleased]
 
+- Adding APCu caching of autoloaded classes.
+- Adds check to prevent multiple failed calls to autoload a class.
+
 ## [0.2.0]
 
 - Supporting PHP 8.1
