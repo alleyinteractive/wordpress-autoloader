@@ -9,6 +9,7 @@ namespace Alley_Interactive\Autoloader\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Alley_Interactive\Autoloader\Autoloader;
+use Alley_Interactive\Autoloader\Tests\Autoloaded\Autoloaded_Class;
 
 /**
  * Autoloader Test Case
@@ -175,22 +176,22 @@ class Test_Autoload extends TestCase {
 			return;
 		}
 
+		var_dump( 'starting now' );
+
 		ini_set( 'apc.enabled', '1' );
 
-		$class = __NAMESPACE__ . '\Autoloaded\Autoloaded_Class';
-
-		$this->assertFalse( class_exists( $class ) );
+		$this->assertFalse( class_exists( Autoloaded_Class::class ) );
 
 		$this->autoloader->set_apcu_prefix( 'apcu_prefix_' );
 
-		$this->assertEmpty( apcu_fetch( 'apcu_prefix_' . $class ) );
+		$this->assertEmpty( apcu_fetch( 'apcu_prefix_' . Autoloaded_Class::class ) );
 
 		$this->autoloader->register();
 
 		var_dump( 'autoloader', $this->autoloader );
 
-		$this->assertTrue( class_exists( $class ) );
+		$this->assertTrue( class_exists( Autoloaded_Class::class ) );
 
-		$this->assertNotEmpty( apcu_fetch( 'apcu_prefix_' . $class ) );
+		$this->assertNotEmpty( apcu_fetch( 'apcu_prefix_' . Autoloaded_Class::class ) );
 	}
 }
