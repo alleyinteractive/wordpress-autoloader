@@ -187,7 +187,6 @@ class Test_Autoload extends TestCase {
 			class_exists( Autoloader::class ),
 		);
 
-		var_dump( 'check', 'apcu_prefix_' . Autoloader::class, apcu_fetch( 'apcu_prefix_' . Autoloader::class ) );
 		$this->assertNotEmpty( apcu_fetch( 'apcu_prefix_' . Autoloader::class ) );
 	}
 }

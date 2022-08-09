@@ -75,6 +75,10 @@ class Autoloader {
 			? $prefix
 			: null;
 
+		var_dump( 'setting prefix', $prefix );
+		var_dump( 'debug', function_exists( 'apcu_fetch' ) && filter_var( ini_get( 'apc.enabled' ), FILTER_VALIDATE_BOOLEAN ) );
+
+
 		return $this;
 	}
 
@@ -140,11 +144,8 @@ class Autoloader {
 		if ( $file ) {
 			require_once $file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 
-			var_dump( 'found file', $this->apcu_prefix ?? null );
-
 			// Cache the found file with APCu if enabled.
 			if ( isset( $this->apcu_prefix ) ) {
-				var_dump( 'adding to apcu', $this->apcu_prefix . $classname );
 				apcu_add( $this->apcu_prefix . $classname, $file );
 			}
 		} else {
