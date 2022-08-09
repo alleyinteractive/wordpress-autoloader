@@ -9,6 +9,7 @@ namespace Alley_Interactive\Autoloader\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Alley_Interactive\Autoloader\Autoloader;
+use Alley_Interactive\Autoloader\Tests\Autoloaded\Other_Autoloaded_Class;
 
 /**
  * Autoloader Test Case
@@ -79,6 +80,29 @@ class Test_Autoload extends TestCase {
 	}
 
 	/**
+	 * Test that a missing class is remembered when it is not found.
+	 */
+	public function test_autoload_class_missing() {
+		$this->assertFalse(
+			class_exists( __NAMESPACE__ . '\Autoloaded\Missing_Class' ),
+		);
+
+		$this->assertFalse(
+			$this->autoloader->is_missing_class( __NAMESPACE__ . '\Autoloaded\Missing_Class' ),
+		);
+
+		$this->autoloader->register();
+
+		$this->assertFalse(
+			class_exists( __NAMESPACE__ . '\Autoloaded\Missing_Class' ),
+		);
+
+		$this->assertTrue(
+			$this->autoloader->is_missing_class( __NAMESPACE__ . '\Autoloaded\Missing_Class' ),
+		);
+	}
+
+	/**
 	 * Test that a class is ignored if it doesn't match the provided namespace.
 	 */
 	public function test_ignore_other_namespaces() {
@@ -141,5 +165,31 @@ class Test_Autoload extends TestCase {
 		$this->assertTrue(
 			class_exists( __NAMESPACE__ . '\Autoloaded\Other_Autoloaded_Class' ),
 		);
+	}
+
+	/**
+	 * Test registering the autoloaderr with APCu.
+	 */
+	public function test_autoload_apcu() {
+		if ( ! function_exists( 'apcu_fetch' ) ) {
+			$this->markTestSkipped( 'APCu is not installed.' );
+			return;
+		}
+
+		$this->autoloader->set_apcu_prefix( 'apcu_prefix_' );
+
+		$this->assertEmpty( apcu_fetch( 'apcu_prefix_' . Autoloader::class ) );
+
+		$this->autoloader->register();
+
+		$this->assertTrue(
+			class_exists( Autoloader::class ),
+		);
+
+		$this->assertTrue(
+			class_exists( Autoloader::class ),
+		);
+
+		$this->assertNotEmpty( apcu_fetch( 'apcu_prefix_' . Autoloader::class ) );
 	}
 }

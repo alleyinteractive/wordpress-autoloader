@@ -26,6 +26,32 @@ class Autoloader {
 	protected string $root_path;
 
 	/**
+	 * Missing classes for the autoloader.
+	 *
+	 * @var bool[]
+	 * @psalm-var array<string, bool>
+	 */
+	protected array $missing_classes = [];
+
+	/**
+	 * APCu cache key prefix.
+	 *
+	 * @var ?string
+	 */
+	protected ?string $apcu_prefix;
+
+	/**
+	 * Generate an autoloader for the WordPress file naming conventions.
+	 *
+	 * @param string $namespace Namespace to autoload.
+	 * @param string $root_path Path in which to look for files.
+	 * @return static Function for spl_autoload_register().
+	 */
+	public static function generate( string $namespace, string $root_path ): callable {
+		return new static( $namespace, $root_path );
+	}
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string $namespace Namespace to register.
@@ -36,6 +62,39 @@ class Autoloader {
 
 		// Ensure consistent root.
 		$this->root_path = rtrim( $root_path, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR;
+	}
+
+	/**
+	 * APCu prefix to use to cache found/not-found classes, if the extension is enabled.
+	 *
+	 * @param string|null $prefix Prefix to use.
+	 * @return static
+	 */
+	public function set_apcu_prefix( string $prefix ) {
+		$this->apcu_prefix = function_exists( 'apcu_fetch' ) && filter_var( ini_get( 'apc.enabled' ), FILTER_VALIDATE_BOOLEAN )
+			? $prefix
+			: null;
+
+		return $this;
+	}
+
+	/**
+	 * The APCu prefix in use, or null if APCu caching is not enabled.
+	 *
+	 * @return string|null
+	 */
+	public function get_apcu_prefix(): ?string {
+		return $this->apcu_prefix;
+	}
+
+	/**
+	 * Check if a class was missing from the autoloader.
+	 *
+	 * @param string $classname Class to check.
+	 * @return bool
+	 */
+	public function is_missing_class( string $classname ): bool {
+		return isset( $this->missing_classes[ $classname ] );
 	}
 
 	/**
@@ -63,6 +122,41 @@ class Autoloader {
 			return;
 		}
 
+		// Check if the class was previously not found.
+		if ( isset( $this->missing_classes[ $classname ] ) ) {
+			return;
+		}
+
+		// Check if the class was previously found with APCu caching.
+		if ( isset( $this->apcu_prefix ) ) {
+			$found = apcu_fetch( $this->apcu_prefix . $classname );
+			if ( false !== $found ) {
+				return;
+			}
+		}
+
+		$file = $this->find_file( $classname );
+
+		if ( $file ) {
+			require_once $file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
+
+			// Cache the found file with APCu if enabled.
+			if ( isset( $this->apcu_prefix ) ) {
+				apcu_add( $this->apcu_prefix . $classname, true );
+			}
+		} else {
+			// Mark the class as not found to save future lookups.
+			$this->missing_classes[ $classname ] = true;
+		}
+	}
+
+	/**
+	 * Find a file for the given class.
+	 *
+	 * @param string $classname Class to find.
+	 * @return string|null
+	 */
+	protected function find_file( string $classname ): ?string {
 		// Break up the classname into parts.
 		$parts = \explode( '\\', $classname );
 
@@ -97,20 +191,10 @@ class Autoloader {
 			$path = $this->root_path . \sprintf( $path, $base_path, $class );
 
 			if ( \file_exists( $path ) ) {
-				require_once $path; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
-				return;
+				return $path;
 			}
 		}
-	}
 
-	/**
-	 * Generate an autoloader for the WordPress file naming conventions.
-	 *
-	 * @param string $namespace Namespace to autoload.
-	 * @param string $root_path Path in which to look for files.
-	 * @return static Function for spl_autoload_register().
-	 */
-	public static function generate( string $namespace, string $root_path ): callable {
-		return new static( $namespace, $root_path );
+		return null;
 	}
 }
