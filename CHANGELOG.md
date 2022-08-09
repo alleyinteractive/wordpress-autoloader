@@ -5,7 +5,14 @@ documented in this file.
 
 ## [Unreleased]
 
-## [0.2.0]
+## 1.1.0 - 2022-08-09
+
+- Adding APCu caching of autoloaded classes.
+- Adds check to prevent multiple failed calls to autoload a class.
+
+## 1.0.0 - 2022-05-25
+
+## 0.2.0
 
 - Supporting PHP 8.1
 - Removing `preg_replace` with `str_*` functions.

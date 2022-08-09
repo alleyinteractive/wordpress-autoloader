@@ -79,6 +79,29 @@ class Test_Autoload extends TestCase {
 	}
 
 	/**
+	 * Test that a missing class is remembered when it is not found.
+	 */
+	public function test_autoload_class_missing() {
+		$this->assertFalse(
+			class_exists( __NAMESPACE__ . '\Autoloaded\Missing_Class' ),
+		);
+
+		$this->assertFalse(
+			$this->autoloader->is_missing_class( __NAMESPACE__ . '\Autoloaded\Missing_Class' ),
+		);
+
+		$this->autoloader->register();
+
+		$this->assertFalse(
+			class_exists( __NAMESPACE__ . '\Autoloaded\Missing_Class' ),
+		);
+
+		$this->assertTrue(
+			$this->autoloader->is_missing_class( __NAMESPACE__ . '\Autoloaded\Missing_Class' ),
+		);
+	}
+
+	/**
 	 * Test that a class is ignored if it doesn't match the provided namespace.
 	 */
 	public function test_ignore_other_namespaces() {
@@ -128,8 +151,6 @@ class Test_Autoload extends TestCase {
 
 	/**
 	 * Test registering the autoloader through the register method.
-	 *
-	 * @return void
 	 */
 	public function test_register_method() {
 		$this->assertFalse(
