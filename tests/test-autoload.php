@@ -9,8 +9,6 @@ namespace Alley_Interactive\Autoloader\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Alley_Interactive\Autoloader\Autoloader;
-use Alley_Interactive\Autoloader\Tests\Autoloaded\Autoloaded_Class;
-use Alley_Interactive\Autoloader\Tests\Autoloaded\APCU_Autoloaded_Class;
 
 /**
  * Autoloader Test Case
@@ -166,33 +164,5 @@ class Test_Autoload extends TestCase {
 		$this->assertTrue(
 			class_exists( __NAMESPACE__ . '\Autoloaded\Other_Autoloaded_Class' ),
 		);
-	}
-
-	/**
-	 * Test registering the autoloaderr with APCu.
-	 */
-	public function test_autoload_apcu() {
-		if ( ! function_exists( 'apcu_fetch' ) ) {
-			$this->markTestSkipped( 'APCu is not installed.' );
-			return;
-		}
-
-		var_dump( 'starting now' );
-
-		ini_set( 'apc.enabled', '1' );
-
-		$this->assertFalse( class_exists( APCU_Autoloaded_Class::class ) );
-
-		$this->autoloader->set_apcu_prefix( 'apcu_prefix_' );
-
-		$this->assertEmpty( apcu_fetch( 'apcu_prefix_' . APCU_Autoloaded_Class::class ) );
-
-		$this->autoloader->register();
-
-		var_dump( 'autoloader', $this->autoloader );
-
-		$this->assertTrue( class_exists( APCU_Autoloaded_Class::class ) );
-
-		$this->assertNotEmpty( apcu_fetch( 'apcu_prefix_' . APCU_Autoloaded_Class::class ) );
 	}
 }

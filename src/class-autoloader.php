@@ -75,8 +75,6 @@ class Autoloader {
 			? $prefix
 			: null;
 
-		var_dump( 'setting prefix', $this->apcu_prefix );
-
 		return $this;
 	}
 
@@ -129,43 +127,23 @@ class Autoloader {
 			return;
 		}
 
-		if ( isset( $this->apcu_prefix ) ) {
-			var_dump(
-				'prefix',
-				( $this->apcu_prefix ?? 'none' ),
-			);
-		}
-
 		// Check if the class was previously found with APCu caching.
 		if ( isset( $this->apcu_prefix ) ) {
-			$found = apcu_fetch( $this->apcu_prefix . $classname );
-			if ( false !== $found ) {
-				return;
+			$hit  = false;
+			$file = apcu_fetch( $this->apcu_prefix . $classname, $hit );
+
+			if ( $hit ) {
+				return $file;
 			}
 		}
 
 		$file = $this->find_file( $classname );
-
-		if ( isset( $this->apcu_prefix ) ) {
-			var_dump(
-				'apcu fetch',
-				( $this->apcu_prefix ?? 'no prefix' ),
-				$classname,
-				$file,
-			);
-		}
 
 		if ( $file ) {
 			require_once $file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 
 			// Cache the found file with APCu if enabled.
 			if ( isset( $this->apcu_prefix ) ) {
-				var_dump(
-					'setting',
-					$this->apcu_prefix . $classname,
-					$file,
-				);
-
 				apcu_add( $this->apcu_prefix . $classname, $file );
 			}
 		} else {
