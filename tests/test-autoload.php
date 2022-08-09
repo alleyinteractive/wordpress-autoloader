@@ -151,8 +151,6 @@ class Test_Autoload extends TestCase {
 
 	/**
 	 * Test registering the autoloader through the register method.
-	 *
-	 * @return void
 	 */
 	public function test_register_method() {
 		$this->assertFalse(
