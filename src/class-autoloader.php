@@ -129,6 +129,11 @@ class Autoloader {
 			return;
 		}
 
+		var_dump(
+			'prefix',
+			( $this->apcu_prefix ?? 'none' ),
+		);
+
 		// Check if the class was previously found with APCu caching.
 		if ( isset( $this->apcu_prefix ) ) {
 			$found = apcu_fetch( $this->apcu_prefix . $classname );
