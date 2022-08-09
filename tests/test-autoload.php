@@ -183,7 +183,7 @@ class Test_Autoload extends TestCase {
 
 		$this->autoloader->register();
 
-		var_dump('autoloader', $this->autoloader);
+		var_dump( 'autoloader', $this->autoloader );
 
 		$this->assertTrue(
 			class_exists( Autoloader::class ),
