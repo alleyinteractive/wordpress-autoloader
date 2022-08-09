@@ -175,6 +175,8 @@ class Test_Autoload extends TestCase {
 			return;
 		}
 
+		ini_set( 'apc.enabled', '1' );
+
 		$this->autoloader->set_apcu_prefix( 'apcu_prefix_' );
 
 		$this->assertEmpty( apcu_fetch( 'apcu_prefix_' . Autoloader::class ) );
