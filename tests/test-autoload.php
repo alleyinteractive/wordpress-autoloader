@@ -9,7 +9,6 @@ namespace Alley_Interactive\Autoloader\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Alley_Interactive\Autoloader\Autoloader;
-use Alley_Interactive\Autoloader\Tests\Autoloaded\Other_Autoloaded_Class;
 
 /**
  * Autoloader Test Case
@@ -186,6 +185,7 @@ class Test_Autoload extends TestCase {
 			class_exists( Autoloader::class ),
 		);
 
+		var_dump( 'check', 'apcu_prefix_' . Autoloader::class, apcu_fetch( 'apcu_prefix_' . Autoloader::class ) );
 		$this->assertNotEmpty( apcu_fetch( 'apcu_prefix_' . Autoloader::class ) );
 	}
 }
