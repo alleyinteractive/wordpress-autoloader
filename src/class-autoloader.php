@@ -142,7 +142,7 @@ class Autoloader {
 
 			// Cache the found file with APCu if enabled.
 			if ( isset( $this->apcu_prefix ) ) {
-				apcu_add( $this->apcu_prefix . $classname );
+				apcu_add( $this->apcu_prefix . $classname, $file );
 			}
 		} else {
 			// Mark the class as not found to save future lookups.
