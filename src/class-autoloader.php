@@ -75,9 +75,7 @@ class Autoloader {
 			? $prefix
 			: null;
 
-		var_dump( 'setting prefix', $prefix );
-		var_dump( 'debug', function_exists( 'apcu_fetch' ) && filter_var( ini_get( 'apc.enabled' ), FILTER_VALIDATE_BOOLEAN ) );
-
+		var_dump( 'setting prefix', $this->apcu_prefix );
 
 		return $this;
 	}
@@ -140,6 +138,12 @@ class Autoloader {
 		}
 
 		$file = $this->find_file( $classname );
+
+		var_dump(
+			'apcu fetch',
+			( $this->apcu_prefix ?? 'no prefix' ),
+			$classname,
+		);
 
 		if ( $file ) {
 			require_once $file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
