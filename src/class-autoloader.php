@@ -140,7 +140,7 @@ class Autoloader {
 		if ( $file ) {
 			require_once $file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 
-			var_dump( 'found file', $this->apcu_prefix );
+			var_dump( 'found file', $this->apcu_prefix ?? null );
 
 			// Cache the found file with APCu if enabled.
 			if ( isset( $this->apcu_prefix ) ) {
