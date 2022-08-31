@@ -133,6 +133,7 @@ class Autoloader {
 			$file = apcu_fetch( $this->apcu_prefix . $classname, $hit );
 
 			if ( $hit ) {
+				require_once $file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 				return $file;
 			}
 		}
