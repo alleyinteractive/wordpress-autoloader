@@ -5,6 +5,10 @@ documented in this file.
 
 ## [Unreleased]
 
+## 1.1.1 - 2022-08-31
+
+- Ensure file is still loaded with APCu.
+
 ## 1.1.0 - 2022-08-09
 
 - Adding APCu caching of autoloaded classes.
