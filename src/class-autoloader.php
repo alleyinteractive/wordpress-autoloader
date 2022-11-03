@@ -232,7 +232,6 @@ class Autoloader {
 
 		// [0] is the __construct function, [1] is who called it.
 		$calling_file = $debug_backtrace[1]['file'];
-
 		$calling_directory = dirname( $calling_file );
 
 		return $calling_directory;
