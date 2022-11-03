@@ -44,6 +44,16 @@ Alley_Interactive\Autoloader\Autoloader::generate(
 	null,
 	__DIR__ . '/src',
 )->register();
+
+// Omit the root path parameter to use 'src' directory relative to the calling file.
+spl_autoload_register(
+	Alley_Interactive\Autoloader\Autoloader::generate(
+		'Plugin\\Namespace'
+	)
+);
+
+// Pass no arguments to use the current file's name space and 'src' directory relative to the calling file.
+Alley_Interactive\Autoloader\Autoloader::generate()->register();
 ```
 
 ## Testing
