@@ -47,7 +47,7 @@ class Autoloader {
 	 * @param string $root_path Path in which to look for files.
 	 * @return static Function for spl_autoload_register().
 	 */
-	public static function generate( ?string $namespace, ?string $root_path ): callable {
+	public static function generate( ?string $namespace = null, ?string $root_path = null ): callable {
 		return new static( $namespace, $root_path );
 	}
 
@@ -57,7 +57,7 @@ class Autoloader {
 	 * @param string $namespace Namespace to register.
 	 * @param string $root_path Root path of the namespace.
 	 */
-	public function __construct( ?string $namespace, ?string $root_path ) {
+	public function __construct( ?string $namespace = null, ?string $root_path = null ) {
 		$this->namespace = $namespace ?? $this->get_calling_file_namespace();
 
 		$root_path = $root_path ?? __DIR__ . '/src';
