@@ -47,7 +47,7 @@ class Autoloader {
 	 * @param string $root_path Path in which to look for files.
 	 * @return static Function for spl_autoload_register().
 	 */
-	public static function generate( string $namespace, string $root_path ): callable {
+	public static function generate( ?string $namespace, string $root_path ): callable {
 		return new static( $namespace, $root_path );
 	}
 
