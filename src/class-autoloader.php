@@ -57,8 +57,8 @@ class Autoloader {
 	 * @param string $namespace Namespace to register.
 	 * @param string $root_path Root path of the namespace.
 	 */
-	public function __construct( string $namespace, string $root_path ) {
-		$this->namespace = $namespace;
+	public function __construct( ?string $namespace, string $root_path ) {
+		$this->namespace = $namespace ?? $this->get_calling_file_namespace();
 
 		// Ensure consistent root.
 		$this->root_path = rtrim( $root_path, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR;
@@ -199,5 +199,23 @@ class Autoloader {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get the namespace of the file that instantiated this class, presumably the root namespace.
+	 *
+	 * phpcs:disable WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition
+	 * phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
+	 * phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_fclose
+	 * phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_fopen
+	 */
+	public function get_calling_file_namespace() {
+
+		$debug_backtrace = debug_backtrace( DEBUG_BACKTRACE_PROVIDE_OBJECT || DEBUG_BACKTRACE_IGNORE_ARGS, 2 );
+
+		$class = new \ReflectionClass( $debug_backtrace[1]['class'] );
+		$calling_namespace = $class->getNamespaceName();
+
+		return $calling_namespace;
 	}
 }

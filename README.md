@@ -38,6 +38,12 @@ spl_autoload_register(
 		__DIR__ . '/src',
 	)
 );
+
+// Pass null as the namespace to use the current file's namespace.
+Alley_Interactive\Autoloader\Autoloader::generate(
+	null,
+	__DIR__ . '/src',
+)->register();
 ```
 
 ## Testing

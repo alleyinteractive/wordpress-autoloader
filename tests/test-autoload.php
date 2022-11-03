@@ -163,4 +163,20 @@ class Test_Autoload extends TestCase {
 			class_exists( __NAMESPACE__ . '\Autoloaded\Other_Autoloaded_Class' ),
 		);
 	}
+
+	/**
+	 * Test using backtrace to determine the namespace that should be used
+	 */
+	public function test_get_calling_file_namespace() {
+
+		$sut = new Autoloader( 'namespace', 'path' );
+
+		// $method = new \ReflectionMethod( Autoloader::class, 'get_calling_file_namespace' );
+		// $method->setAccessible( true );
+		//
+		// $result = $method->invoke( $sut );
+		$result = $sut->get_calling_file_namespace();
+
+		$this->assertEquals( __NAMESPACE__, $result );
+	}
 }
