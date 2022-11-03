@@ -60,7 +60,7 @@ class Autoloader {
 	public function __construct( ?string $namespace = null, ?string $root_path = null ) {
 		$this->namespace = $namespace ?? $this->get_calling_file_namespace();
 
-		$root_path = $root_path ?? __DIR__ . '/src';
+		$root_path = $root_path ?? $this->get_calling_directory() . '/src';
 
 		// Ensure consistent root.
 		$this->root_path = rtrim( $root_path, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR;
@@ -219,5 +219,22 @@ class Autoloader {
 		$calling_namespace = $class->getNamespaceName();
 
 		return $calling_namespace;
+	}
+
+	/**
+	 * Get the directory of the file that instantiated this class.
+	 *
+	 * phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
+	 */
+	public function get_calling_directory() {
+
+		$debug_backtrace = debug_backtrace( DEBUG_BACKTRACE_PROVIDE_OBJECT || DEBUG_BACKTRACE_IGNORE_ARGS, 2 );
+
+		// [0] is the __construct function, [1] is who called it.
+		$calling_file = $debug_backtrace[1]['file'];
+
+		$calling_directory = dirname( $calling_file );
+
+		return $calling_directory;
 	}
 }
