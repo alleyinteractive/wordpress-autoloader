@@ -59,7 +59,6 @@ class Autoloader {
 	 */
 	public function __construct( ?string $namespace = null, ?string $root_path = null ) {
 		$this->namespace = $namespace ?? $this->get_calling_file_namespace();
-
 		$root_path = $root_path ?? $this->get_calling_directory() . '/src';
 
 		// Ensure consistent root.
