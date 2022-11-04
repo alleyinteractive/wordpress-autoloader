@@ -7,6 +7,9 @@
 
 namespace Alley_Interactive\Autoloader;
 
+use Exception;
+use ReflectionClass;
+
 /**
  * WordPress Autoload Generator
  */
@@ -206,33 +209,66 @@ class Autoloader {
 	 * Get the namespace of the file that instantiated this class, presumably the root namespace.
 	 *
 	 * phpcs:disable WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition
-	 * phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
 	 * phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_fclose
 	 * phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_fopen
 	 */
-	public function get_calling_file_namespace() {
+	public function get_calling_file_namespace(): string {
 
-		$debug_backtrace = debug_backtrace( DEBUG_BACKTRACE_PROVIDE_OBJECT || DEBUG_BACKTRACE_IGNORE_ARGS, 2 );
+		$backtrace = $this->get_calling_file_backtrace();
 
-		$class = new \ReflectionClass( $debug_backtrace[1]['class'] );
-		$calling_namespace = $class->getNamespaceName();
+		if ( isset( $backtrace['class'] ) && false === strpos( $backtrace['class'], 'Alley_Interactive\Autoloader\Autoloader' ) ) {
+			$class             = new ReflectionClass( $backtrace['class'] );
+			$calling_namespace = $class->getNamespaceName();
+			return $calling_namespace;
+		}
 
+		$calling_file = $backtrace['file'];
+
+		$calling_namespace = null;
+		$handle            = fopen( $calling_file, 'r' );
+		if ( $handle ) {
+			while ( false !== ( $line = fgets( $handle ) ) ) {
+				if ( 0 === strpos( $line, 'namespace' ) ) {
+					$parts             = explode( ' ', $line );
+					$calling_namespace = rtrim( trim( $parts[1] ), ';' );
+					break;
+				}
+			}
+			fclose( $handle );
+		}
 		return $calling_namespace;
 	}
 
 	/**
 	 * Get the directory of the file that instantiated this class.
-	 *
-	 * phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
 	 */
-	public function get_calling_directory() {
+	public function get_calling_directory(): string {
 
-		$debug_backtrace = debug_backtrace( DEBUG_BACKTRACE_PROVIDE_OBJECT || DEBUG_BACKTRACE_IGNORE_ARGS, 2 );
+		$backtrace = $this->get_calling_file_backtrace();
 
-		// [0] is the __construct function, [1] is who called it.
-		$calling_file = $debug_backtrace[1]['file'];
+		$calling_file = $backtrace['file'];
 		$calling_directory = dirname( $calling_file );
 
 		return $calling_directory;
+	}
+
+	/**
+	 * Get the backtrace entry for the first file that is not this file. I.e. the file that is calling this file.
+	 *
+	 * phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
+	 *
+	 * @throws Exception If the calling file cannot be determined. An almost impossible scenario.
+	 */
+	protected function get_calling_file_backtrace(): array {
+
+		$debug_backtrace = debug_backtrace( DEBUG_BACKTRACE_PROVIDE_OBJECT || DEBUG_BACKTRACE_IGNORE_ARGS, 5 );
+
+		foreach ( $debug_backtrace as $backtrace ) {
+			if ( __FILE__ !== $backtrace['file'] ) {
+				return $backtrace;
+			}
+		}
+
+		throw new Exception( 'No calling file could be determined from backtrace.' );
 	}
 }
