@@ -3,7 +3,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/alleyinteractive/wordpress-autoloader.svg?style=flat-square)](https://packagist.org/packages/alleyinteractive/wordpress-autoloader)
 [![Tests](https://github.com/alleyinteractive/wordpress-autoloader/actions/workflows/tests.yml/badge.svg)](https://github.com/alleyinteractive/wordpress-autoloader/actions/workflows/tests.yml)
 
-A PHP Autoloader that supports the [Wordpress Coding
+A PHP Autoloader that supports the [WordPress Coding
 Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/). For example, a folder that looks like this would be autoloaded as:
 
 ```
