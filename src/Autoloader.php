@@ -54,10 +54,23 @@ class Autoloader
     /**
      * APCu prefix to use to cache found/not-found classes, if the extension is enabled.
      *
+     * @deprecated 1.2.0 Renamed to setApcuPrefix().
+     *
      * @param string|null $prefix Prefix to use.
      * @return static
      */
-    public function set_apcu_prefix(string $prefix)
+    public function set_apcu_prefix(?string $prefix)
+    {
+        return $this->setApcuPrefix($prefix);
+    }
+
+    /**
+     * APCu prefix to use to cache found/not-found classes, if the extension is enabled.
+     *
+     * @param string|null $prefix Prefix to use.
+     * @return static
+     */
+    public function setApcuPrefix(?string $prefix)
     {
         $this->apcu_prefix = function_exists('apcu_fetch') && filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN)
             ? $prefix
@@ -71,7 +84,7 @@ class Autoloader
      *
      * @return string|null
      */
-    public function get_apcu_prefix(): ?string
+    public function getApcuPrefix(): ?string
     {
         return $this->apcu_prefix;
     }
@@ -82,7 +95,7 @@ class Autoloader
      * @param string $classname Class to check.
      * @return bool
      */
-    public function is_missing_class(string $classname): bool
+    public function isMissingClass(string $classname): bool
     {
         return isset($this->missing_classes[ $classname ]);
     }
@@ -131,7 +144,7 @@ class Autoloader
             }
         }
 
-        $file = $this->find_file($classname);
+        $file = $this->findFile($classname);
 
         if ($file) {
             require_once $file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
@@ -152,7 +165,7 @@ class Autoloader
      * @param string $classname Class to find.
      * @return string|null
      */
-    protected function find_file(string $classname): ?string
+    protected function findFile(string $classname): ?string
     {
         // Break up the classname into parts.
         $parts = \explode('\\', $classname);

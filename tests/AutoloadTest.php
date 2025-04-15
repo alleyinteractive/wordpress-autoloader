@@ -95,7 +95,7 @@ class AutoloadTest extends TestCase
         );
 
         $this->assertFalse(
-            $this->autoloader->is_missing_class(__NAMESPACE__ . '\Autoloaded\Missing_Class'),
+            $this->autoloader->isMissingClass(__NAMESPACE__ . '\Autoloaded\Missing_Class'),
         );
 
         $this->autoloader->register();
@@ -105,7 +105,7 @@ class AutoloadTest extends TestCase
         );
 
         $this->assertTrue(
-            $this->autoloader->is_missing_class(__NAMESPACE__ . '\Autoloaded\Missing_Class'),
+            $this->autoloader->isMissingClass(__NAMESPACE__ . '\Autoloaded\Missing_Class'),
         );
     }
 
