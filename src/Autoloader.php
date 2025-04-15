@@ -184,10 +184,10 @@ class Autoloader
 
         // Support multiple locations since the class could be a class, trait or interface.
         $paths = [
-            '%1$s' . DIRECTORY_SEPARATOR . 'class-%2$s.php',
-            '%1$s' . DIRECTORY_SEPARATOR . 'trait-%2$s.php',
-            '%1$s' . DIRECTORY_SEPARATOR . 'interface-%2$s.php',
-            '%1$s' . DIRECTORY_SEPARATOR . 'enum-%2$s.php',
+            "class-{$class}.php",
+            "trait-{$class}.php",
+            "interface-{$class}.php",
+            "enum-{$class}.php",
         ];
 
         /*
@@ -198,7 +198,7 @@ class Autoloader
         * tell which was requested.
         */
         foreach ($paths as $path) {
-            $path = $this->root_path . \sprintf($path, $base_path, $class);
+            $path = $this->root_path . $base_path . DIRECTORY_SEPARATOR . $path;
 
             if (\file_exists($path)) {
                 return $path;
