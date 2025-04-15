@@ -33,8 +33,15 @@ jobs:
       - name: Install dependencies
         run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
-      - name: Execute tests
-        run: composer test
+      - name: Composer Validate
+        run: composer validate --strict
+
+      - name: Execute phpcs
+        if: matrix.os == 'ubuntu-latest'
+        run: composer run phpcs
+
+      - name: Execute phpunit
+        run: composer run phpunit
 
   # This required job ensures that all PR checks have passed before merging.
   all-pr-checks-passed:
