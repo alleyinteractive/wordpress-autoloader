@@ -5,6 +5,10 @@ documented in this file.
 
 ## [Unreleased]
 
+## 1.2.0
+
+- Dropped PHP 8.0 support, added testing for 8.4. New minimum PHP version is 8.1.
+
 ## 1.1.1 - 2022-08-31
 
 - Ensure file is still loaded with APCu.
