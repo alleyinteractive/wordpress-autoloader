@@ -24,7 +24,7 @@
   },
   "autoload": {
     "files": [
-      "src/Autoloader.php"
+      "src/class-autoloader.php"
     ]
   },
   "minimum-stability": "dev",

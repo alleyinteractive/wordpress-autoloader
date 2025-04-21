@@ -5,6 +5,10 @@ documented in this file.
 
 ## [Unreleased]
 
+## 1.2.1
+
+- Reverts the file rename from `Autoload.php` to `class-autoload.php` that is causing issues downstream.
+
 ## 1.2.0
 
 - Dropped PHP 8.0 support, added testing for 8.4. New minimum PHP version is 8.1.
