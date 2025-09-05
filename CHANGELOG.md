@@ -5,6 +5,11 @@ documented in this file.
 
 ## [Unreleased]
 
+## 1.3.0
+
+- Dropped PHP 8.1 support, new minimum PHP version is 8.2.
+- Upgraded PHPUnit from ^10.5.45 to ^11.0.
+
 ## 1.2.1
 
 - Reverts the file rename from `Autoload.php` to `class-autoload.php` that is causing issues downstream.
