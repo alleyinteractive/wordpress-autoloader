@@ -163,6 +163,51 @@ class AutoloadTest extends TestCase
     }
 
     /**
+     * Test that an enum is autoloaded.
+     */
+    public function test_autoload_enum()
+    {
+        $this->assert_true_after_registering_autoloader(
+            'enum_exists',
+            [ __NAMESPACE__ . '\Autoloaded\Autoloaded_Enum' ]
+        );
+    }
+
+    /**
+     * Test that a namespace sharing the registered prefix is not handled.
+     */
+    public function test_ignore_namespace_sharing_prefix()
+    {
+        $this->autoloader->register();
+
+        $this->assertFalse(class_exists(__NAMESPACE__ . '\AutoloadedExtra\Autoloaded_Class'));
+        $this->assertFalse($this->autoloader->isMissingClass(__NAMESPACE__ . '\AutoloadedExtra\Autoloaded_Class'));
+    }
+
+    /**
+     * Test that the namespace and root path are normalized.
+     */
+    public function test_normalizes_namespace_and_root_path()
+    {
+        $autoloader = Autoloader::generate('\\' . __NAMESPACE__ . '\\Autoloaded\\', __DIR__ . '/includes/');
+        $autoloader->register();
+
+        try {
+            $this->assertTrue(class_exists(__NAMESPACE__ . '\Autoloaded\Subnamespaced\Normalized_Class'));
+        } finally {
+            $autoloader->unregister();
+        }
+    }
+
+    /**
+     * Test that the APCu prefix defaults to null.
+     */
+    public function test_apcu_prefix_defaults_to_null()
+    {
+        $this->assertNull($this->autoloader->getApcuPrefix());
+    }
+
+    /**
      * Test registering the autoloader through the register method.
      */
     public function test_register_method()

@@ -8,7 +8,7 @@ Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-sta
 
 ```
 src/class-example-class.php -> Root_Namespace\Example_Class
-src/trait-reusable-feature.php -> Root_Namesace\Reusable_Feature
+src/trait-reusable-feature.php -> Root_Namespace\Reusable_Feature
 src/feature/class-example-feature.php -> Root_Namespace\Feature\Example_Feature
 ```
 

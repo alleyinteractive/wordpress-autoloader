@@ -6,6 +6,8 @@
  * @package WordPress_Autoloader
  */
 
+declare(strict_types=1);
+
 namespace Alley_Interactive\Autoloader;
 
 /**
@@ -22,19 +24,16 @@ class Autoloader
 
     /**
      * APCu cache key prefix.
-     *
-     * @var ?string
      */
-    protected ?string $apcu_prefix;
+    protected ?string $apcu_prefix = null;
 
     /**
      * Generate an autoloader for the WordPress file naming conventions.
      *
      * @param string $namespace Namespace to autoload.
      * @param string $root_path Root path of the namespace to load from.
-     * @return static Function for spl_autoload_register().
      */
-    public static function generate(string $namespace, string $root_path): callable
+    public static function generate(string $namespace, string $root_path): static
     {
         return new static($namespace, $root_path);
     }
@@ -47,8 +46,9 @@ class Autoloader
      */
     public function __construct(protected string $namespace, protected string $root_path)
     {
-        // Ensure consistent root.
-        $this->root_path = rtrim($root_path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        // The trailing separator keeps "Foo\Bar" from matching "Foo\Barbaz\Class".
+        $this->namespace = trim($namespace, '\\') . '\\';
+        $this->root_path = rtrim($root_path, '/\\') . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -57,9 +57,8 @@ class Autoloader
      * @deprecated 1.2.0 Renamed to setApcuPrefix().
      *
      * @param string|null $prefix Prefix to use.
-     * @return static
      */
-    public function set_apcu_prefix(?string $prefix)
+    public function set_apcu_prefix(?string $prefix): static
     {
         return $this->setApcuPrefix($prefix);
     }
@@ -68,9 +67,8 @@ class Autoloader
      * APCu prefix to use to cache found/not-found classes, if the extension is enabled.
      *
      * @param string|null $prefix Prefix to use.
-     * @return static
      */
-    public function setApcuPrefix(?string $prefix)
+    public function setApcuPrefix(?string $prefix): static
     {
         $this->apcu_prefix = function_exists('apcu_fetch') && filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN)
             ? $prefix
@@ -81,8 +79,6 @@ class Autoloader
 
     /**
      * The APCu prefix in use, or null if APCu caching is not enabled.
-     *
-     * @return string|null
      */
     public function getApcuPrefix(): ?string
     {
@@ -93,7 +89,6 @@ class Autoloader
      * Check if a class was missing from the autoloader.
      *
      * @param string $classname Class to check.
-     * @return bool
      */
     public function isMissingClass(string $classname): bool
     {
@@ -103,7 +98,7 @@ class Autoloader
     /**
      * Register the autoloader.
      */
-    public function register()
+    public function register(): void
     {
         spl_autoload_register($this);
     }
@@ -111,7 +106,7 @@ class Autoloader
     /**
      * Unregister the autoloader.
      */
-    public function unregister()
+    public function unregister(): void
     {
         spl_autoload_unregister($this);
     }
@@ -121,41 +116,37 @@ class Autoloader
      *
      * @param string $classname Class being autoloaded.
      */
-    public function __invoke(string $classname)
+    public function __invoke(string $classname): void
     {
-        // Ignore if the base namespace doesn't match.
-        if (0 !== \strpos($classname, $this->namespace)) {
+        if (! str_starts_with($classname, $this->namespace)) {
             return;
         }
 
-        // Check if the class was previously not found.
         if (isset($this->missing_classes[ $classname ])) {
             return;
         }
 
-        // Check if the class was previously found with APCu caching.
         if (isset($this->apcu_prefix)) {
             $hit  = false;
             $file = apcu_fetch($this->apcu_prefix . $classname, $hit);
 
-            if ($hit) {
-                require_once $file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
-                return $file;
+            if ($hit && is_string($file)) {
+                require_once $file;
+                return;
             }
         }
 
         $file = $this->findFile($classname);
 
-        if ($file) {
-            require_once $file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
-
-            // Cache the found file with APCu if enabled.
-            if (isset($this->apcu_prefix)) {
-                apcu_add($this->apcu_prefix . $classname, $file);
-            }
-        } else {
-            // Mark the class as not found to save future lookups.
+        if (null === $file) {
             $this->missing_classes[ $classname ] = true;
+            return;
+        }
+
+        require_once $file;
+
+        if (isset($this->apcu_prefix)) {
+            apcu_add($this->apcu_prefix . $classname, $file);
         }
     }
 
@@ -163,44 +154,23 @@ class Autoloader
      * Find a file for the given class.
      *
      * @param string $classname Class to find.
-     * @return string|null
      */
     protected function findFile(string $classname): ?string
     {
-        // Break up the classname into parts.
-        $parts = \explode('\\', $classname);
+        $parts = explode('\\', substr($classname, strlen($this->namespace)));
+        $class = strtolower(str_replace('_', '-', array_pop($parts)));
 
-        // Retrieve the class name (last item) and convert it to a filename.
-        $class = \strtolower(\str_replace('_', '-', \array_pop($parts)));
+        $directory = $this->root_path;
 
-        $base_path = '';
-
-        // Build the base path relative to the sub-namespace.
-        $sub_namespace = \substr(\implode(DIRECTORY_SEPARATOR, $parts), \strlen($this->namespace));
-
-        if (! empty($sub_namespace)) {
-            $base_path = \str_replace('_', '-', \strtolower($sub_namespace));
+        if ($parts) {
+            $directory .= strtolower(str_replace('_', '-', implode(DIRECTORY_SEPARATOR, $parts))) . DIRECTORY_SEPARATOR;
         }
 
-        // Support multiple locations since the class could be a class, trait or interface.
-        $paths = [
-            "class-{$class}.php",
-            "trait-{$class}.php",
-            "interface-{$class}.php",
-            "enum-{$class}.php",
-        ];
+        // A class, trait, interface, or enum could share the same name, so check each prefix in order.
+        foreach (['class', 'trait', 'interface', 'enum'] as $type) {
+            $path = "{$directory}{$type}-{$class}.php";
 
-        /*
-        * Attempt to find the file by looping through the various paths.
-        *
-        * Autoloading a class will also cause a trait or interface with the
-        * same fully qualified name to be autoloaded, as it's impossible to
-        * tell which was requested.
-        */
-        foreach ($paths as $path) {
-            $path = $this->root_path . $base_path . DIRECTORY_SEPARATOR . $path;
-
-            if (\file_exists($path)) {
+            if (file_exists($path)) {
                 return $path;
             }
         }

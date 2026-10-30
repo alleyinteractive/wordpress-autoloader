@@ -5,6 +5,12 @@ documented in this file.
 
 ## [Unreleased]
 
+- Dropped PHP 8.1 and 8.2 support, added testing for 8.5. New minimum PHP version is 8.3.
+- Added return types to all methods; `generate()` now returns `static`.
+- Fixed a namespace matching more than its own classes (`Foo\Bar` no longer handles `Foo\Barbaz\Example`).
+- Fixed `getApcuPrefix()` throwing an error when called before `setApcuPrefix()`.
+- Namespaces with leading or trailing backslashes and root paths with a trailing `/` are now normalized.
+
 ## 1.2.1
 
 - Reverts the file rename from `Autoload.php` to `class-autoload.php` that is causing issues downstream.
