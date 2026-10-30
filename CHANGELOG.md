@@ -5,12 +5,15 @@ documented in this file.
 
 ## [Unreleased]
 
+## 1.3.0 - 2026-10-30
+
 - Dropped PHP 8.1 and 8.2 support, added testing for 8.5. New minimum PHP version is 8.3.
 - Added PHPStan at the max level to linting and CI.
 - Added return types to all methods; `generate()` now returns `static`.
 - Fixed a namespace matching more than its own classes (`Foo\Bar` no longer handles `Foo\Barbaz\Example`).
 - Fixed `getApcuPrefix()` throwing an error when called before `setApcuPrefix()`.
 - Namespaces with leading or trailing backslashes and root paths with a trailing `/` are now normalized.
+- Subclasses must keep the constructor signature, since `generate()` uses `new static()`.
 
 ## 1.2.1
 
