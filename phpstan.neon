@@ -5,3 +5,6 @@ parameters:
     - tests
   excludePaths:
     - tests/includes
+  phpVersion:
+    min: 80300
+    max: 80599

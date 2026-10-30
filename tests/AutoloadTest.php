@@ -50,11 +50,7 @@ class AutoloadTest extends TestCase
      */
     protected function register_autoloader(): void
     {
-        try {
-            \spl_autoload_register($this->autoloader);
-        } catch (\Exception $exception) {
-            $this->fail($exception->getMessage());
-        }
+        \spl_autoload_register($this->autoloader);
     }
 
     /**
