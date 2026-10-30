@@ -21,7 +21,7 @@ class AutoloadTest extends TestCase
      *
      * @var Autoloader
      */
-    protected $autoloader;
+    protected Autoloader $autoloader;
 
     /**
      * Set up, generate the autoloader.
@@ -48,22 +48,18 @@ class AutoloadTest extends TestCase
     /**
      * Register the autoloader.
      */
-    protected function register_autoloader()
+    protected function register_autoloader(): void
     {
-        try {
-            \spl_autoload_register($this->autoloader);
-        } catch (\Exception $exception) {
-            $this->fail($exception->getMessage());
-        }
+        \spl_autoload_register($this->autoloader);
     }
 
     /**
      * Tests that a function returns true only after registering the autoloader.
      *
      * @param callable $func Function to test.
-     * @param array    $args Array of function arguments.
+     * @param array<int, mixed> $args Array of function arguments.
      */
-    protected function assert_true_after_registering_autoloader(callable $func, array $args)
+    protected function assert_true_after_registering_autoloader(callable $func, array $args): void
     {
         $this->assertFalse(\call_user_func_array($func, $args));
         $this->register_autoloader();
@@ -73,7 +69,7 @@ class AutoloadTest extends TestCase
     /**
      * Test that a class is autoloaded.
      */
-    public function test_autoload_class()
+    public function test_autoload_class(): void
     {
         $this->assertFalse(
             class_exists(__NAMESPACE__ . '\Autoloaded\Autoloaded_Class'),
@@ -88,7 +84,7 @@ class AutoloadTest extends TestCase
     /**
      * Test that a missing class is remembered when it is not found.
      */
-    public function test_autoload_class_missing()
+    public function test_autoload_class_missing(): void
     {
         $this->assertFalse(
             class_exists(__NAMESPACE__ . '\Autoloaded\Missing_Class'),
@@ -112,7 +108,7 @@ class AutoloadTest extends TestCase
     /**
      * Test that a class is ignored if it doesn't match the provided namespace.
      */
-    public function test_ignore_other_namespaces()
+    public function test_ignore_other_namespaces(): void
     {
         $this->register_autoloader();
         $this->assertFalse(\class_exists('\This\Is\Not\A\Class'));
@@ -121,7 +117,7 @@ class AutoloadTest extends TestCase
     /**
      * Test that a sub-namespaced class is autoloaded.
      */
-    public function test_autoload_subnamespaced_class()
+    public function test_autoload_subnamespaced_class(): void
     {
         $this->assert_true_after_registering_autoloader(
             'class_exists',
@@ -132,7 +128,7 @@ class AutoloadTest extends TestCase
     /**
      * Test that a class in a sub-namespace containing underscores is autoloaded.
      */
-    public function test_autoload_subnamespaced_with_underscores_class()
+    public function test_autoload_subnamespaced_with_underscores_class(): void
     {
         $this->assert_true_after_registering_autoloader(
             'class_exists',
@@ -143,7 +139,7 @@ class AutoloadTest extends TestCase
     /**
      * Test that a trait is autoloaded.
      */
-    public function test_autoload_trait()
+    public function test_autoload_trait(): void
     {
         $this->assert_true_after_registering_autoloader(
             'trait_exists',
@@ -154,7 +150,7 @@ class AutoloadTest extends TestCase
     /**
      * Test that an interface is autoloaded.
      */
-    public function test_autoload_interface()
+    public function test_autoload_interface(): void
     {
         $this->assert_true_after_registering_autoloader(
             'interface_exists',
@@ -165,7 +161,7 @@ class AutoloadTest extends TestCase
     /**
      * Test that an enum is autoloaded.
      */
-    public function test_autoload_enum()
+    public function test_autoload_enum(): void
     {
         $this->assert_true_after_registering_autoloader(
             'enum_exists',
@@ -176,7 +172,7 @@ class AutoloadTest extends TestCase
     /**
      * Test that a namespace sharing the registered prefix is not handled.
      */
-    public function test_ignore_namespace_sharing_prefix()
+    public function test_ignore_namespace_sharing_prefix(): void
     {
         $this->autoloader->register();
 
@@ -187,7 +183,7 @@ class AutoloadTest extends TestCase
     /**
      * Test that the namespace and root path are normalized.
      */
-    public function test_normalizes_namespace_and_root_path()
+    public function test_normalizes_namespace_and_root_path(): void
     {
         $autoloader = Autoloader::generate('\\' . __NAMESPACE__ . '\\Autoloaded\\', __DIR__ . '/includes/');
         $autoloader->register();
@@ -202,7 +198,7 @@ class AutoloadTest extends TestCase
     /**
      * Test that the APCu prefix defaults to null.
      */
-    public function test_apcu_prefix_defaults_to_null()
+    public function test_apcu_prefix_defaults_to_null(): void
     {
         $this->assertNull($this->autoloader->getApcuPrefix());
     }
@@ -210,7 +206,7 @@ class AutoloadTest extends TestCase
     /**
      * Test registering the autoloader through the register method.
      */
-    public function test_register_method()
+    public function test_register_method(): void
     {
         $this->assertFalse(
             class_exists(__NAMESPACE__ . '\Autoloaded\Other_Autoloaded_Class'),

@@ -12,6 +12,8 @@ namespace Alley_Interactive\Autoloader;
 
 /**
  * WordPress Autoload Generator
+ *
+ * @phpstan-consistent-constructor
  */
 class Autoloader
 {
